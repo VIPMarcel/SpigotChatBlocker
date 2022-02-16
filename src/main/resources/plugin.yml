@@ -1,0 +1,8 @@
+name: ChatBlocker
+version: 1.0-SNAPSHOT
+author: VIPMarcel
+api-version: 1.18
+depend: [ProtocolLib]
+loadbefore: [ProtocolLib]
+
+main: vip.marcel.chatblocker.ChatBlocker
