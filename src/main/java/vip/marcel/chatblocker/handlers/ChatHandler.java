@@ -40,7 +40,7 @@ public class ChatHandler {
                             String noPermissions = ChatColor.translateAlternateColorCodes('&', ChatHandler.this.plugin.getNoPermissionsMessage()).replace("{command}", commandArray[0]);
                             player.sendMessage(noPermissions);
 
-                            plugin.getLogger().log(Level.INFO, player.getName() + " tried server command: " + commandArray[0]);
+                            plugin.getLogger().log(Level.INFO, player.getName() + " tried server command: " + command);
 
                             event.setCancelled(true);
                         }
