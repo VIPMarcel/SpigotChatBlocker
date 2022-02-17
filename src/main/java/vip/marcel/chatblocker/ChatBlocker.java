@@ -1,12 +1,14 @@
 package vip.marcel.chatblocker;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import vip.marcel.chatblocker.handlers.ChatHandler;
-import vip.marcel.chatblocker.handlers.TabCompleteHandler;
+import vip.marcel.chatblocker.listeners.PlayerCommandSendListener;
 import vip.marcel.chatblocker.managers.ConfigManager;
-import vip.marcel.chatblocker.utils.TabInterceptor;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class ChatBlocker extends JavaPlugin {
@@ -15,10 +17,10 @@ public class ChatBlocker extends JavaPlugin {
 
     private ChatHandler chatHandler;
 
-    private TabInterceptor tabInterceptor;
+    private PluginManager pluginManager;
 
     private String noPermissionsMessage, ignorePermission;
-    private Vector<String> allowedCommands;
+    private List<String> allowedCommands;
 
     @Override
     public void onEnable() {
@@ -38,23 +40,16 @@ public class ChatBlocker extends JavaPlugin {
         this.ignorePermission = this.configManager.getConfiguration().getString("System.NoCheckingPermission");
         this.noPermissionsMessage = this.configManager.getConfiguration().getString("System.NoPermissions");
 
-        this.allowedCommands = new Vector<>();
+        this.allowedCommands = new ArrayList<>();
         this.configManager.getConfiguration().getStringList("System.AllowedCommands").forEach(allowedCommand -> {
             this.allowedCommands.add(allowedCommand.toLowerCase());
         });
 
         this.chatHandler = new ChatHandler(this);
 
-        this.tabInterceptor = new TabCompleteHandler(this);
+        this.pluginManager = Bukkit.getServer().getPluginManager();
+        this.pluginManager.registerEvents(new PlayerCommandSendListener(this), this);
 
-    }
-
-    @Override
-    public void onDisable() {
-        if(this.tabInterceptor != null) {
-            this.tabInterceptor.close();
-            this.tabInterceptor = null;
-        }
     }
 
     public String getNoPermissionsMessage() {
@@ -65,7 +60,7 @@ public class ChatBlocker extends JavaPlugin {
         return this.ignorePermission;
     }
 
-    public Vector<String> getAllowedCommands() {
+    public List<String> getAllowedCommands() {
         return this.allowedCommands;
     }
 
