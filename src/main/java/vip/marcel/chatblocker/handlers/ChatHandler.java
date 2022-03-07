@@ -33,7 +33,7 @@ public class ChatHandler {
                     String command = event.getPacket().getStrings().read(0);
                     String[] commandArray = command.split(" ");
 
-                    if(!player.hasPermission(ChatHandler.this.plugin.getIgnorePermission()) && command.startsWith("/")) {
+                    if(!player.hasPermission(ChatHandler.this.plugin.getIgnorePermission()) | !player.hasPermission(ChatHandler.this.plugin.getIgnorePermission() + "." + command.toLowerCase().replaceFirst("/", "")) && command.startsWith("/")) {
 
                         if(!ChatHandler.this.plugin.getAllowedCommands().contains(commandArray[0].toLowerCase())) {
 
