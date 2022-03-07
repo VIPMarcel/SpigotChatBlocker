@@ -30,19 +30,38 @@ public class ChatHandler {
                 if(event.getPacketType() == PacketType.Play.Client.CHAT) {
                     final Player player = event.getPlayer();
 
-                    String command = event.getPacket().getStrings().read(0);
-                    String[] commandArray = command.split(" ");
+                    String message = event.getPacket().getStrings().read(0);
+                    String[] commandArray = message.split(" ");
 
-                    if(!player.hasPermission(ChatHandler.this.plugin.getIgnorePermission()) | !player.hasPermission(ChatHandler.this.plugin.getIgnorePermission() + "." + command.toLowerCase().replaceFirst("/", "")) && command.startsWith("/")) {
+                    String commandPermission = ChatHandler.this.plugin.getIgnorePermission() + "." + commandArray[0].toLowerCase().replaceFirst("/", "");
 
-                        if(!ChatHandler.this.plugin.getAllowedCommands().contains(commandArray[0].toLowerCase())) {
+                    if(commandArray[0].startsWith("/")) {
+
+                        if(player.hasPermission(ChatHandler.this.plugin.getIgnorePermission()))
+                            return;
+
+                        if(ChatHandler.this.plugin.getAllowedCommands().contains(commandArray[0].toLowerCase())) {
+
+                            if(player.hasPermission(commandPermission))
+                                return;
 
                             String noPermissions = ChatColor.translateAlternateColorCodes('&', ChatHandler.this.plugin.getNoPermissionsMessage()).replace("{command}", commandArray[0]);
                             player.sendMessage(noPermissions);
 
-                            plugin.getLogger().log(Level.INFO, player.getName() + " tried server command: " + command);
+                            plugin.getLogger().log(Level.INFO, player.getName() + " tried server command: " + message);
 
                             event.setCancelled(true);
+
+                        }
+                        else {
+
+                            String noPermissions = ChatColor.translateAlternateColorCodes('&', ChatHandler.this.plugin.getNoPermissionsMessage()).replace("{command}", commandArray[0]);
+                            player.sendMessage(noPermissions);
+
+                            plugin.getLogger().log(Level.INFO, player.getName() + " tried server command: " + message);
+
+                            event.setCancelled(true);
+
                         }
 
                     }
