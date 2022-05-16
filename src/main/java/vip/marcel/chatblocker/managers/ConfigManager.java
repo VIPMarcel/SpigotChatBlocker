@@ -40,10 +40,6 @@ public class ConfigManager {
         }
     }
 
-    private void loadConfigurations() {
-
-    }
-
     public void save() {
         try {
             this.configuration.save(this.file);
